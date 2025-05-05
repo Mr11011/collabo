@@ -38,6 +38,7 @@ dependencies:
   hexcolor: ^3.0.1
   firebase_auth: ^5.5.3
   fluttertoast: ^8.2.12
+  cloud_firestore: ^5.6.7
   conditional_builder_null_safety:
   device_preview: ^1.2.0
   flutter_bloc: ^9.1.1
@@ -68,9 +69,11 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/Background.png
+    - assets/images/char3.png
+    - assets/images/OB.png
+    - assets/images/smile.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
