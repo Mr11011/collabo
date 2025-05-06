@@ -1,12 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collabo/features/workspace/controller/workspace_cubit.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'core/blocObserver.dart';
+import 'core/di.dart';
 import 'features/auth/controller/auth_cubit.dart';
 import 'features/auth/controller/auth_states.dart';
 import 'features/auth/views/sign_in_screen.dart';
@@ -18,6 +18,8 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   Bloc.observer = MyBlocObserver();
 
+  await init();
+
   runApp(
     DevicePreview(
       enabled: !kReleaseMode,
@@ -26,10 +28,10 @@ void main() async {
             providers: [
               BlocProvider(
                 create:
-                    (context) => AuthCubit(
-                      firebaseAuth: FirebaseAuth.instance,
-                      firestore: FirebaseFirestore.instance,
-                    )..checkAuthState(), // Initialize auth state
+                    (BuildContext context) => sl<AuthCubit>()..checkAuthState(),
+              ),
+              BlocProvider(
+                create: (BuildContext context) => sl<WorkSpaceCubit>(),
               ),
             ],
             child: const MyApp(),
