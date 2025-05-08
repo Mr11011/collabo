@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import '../../auth/widgets/customTextfield.dart';
+import '../../task/view/board_details_screen.dart';
 import '../controller/board_cubit.dart';
 import '../controller/board_states.dart';
 import '../../../core/di.dart';
@@ -147,8 +148,8 @@ class _WorkspaceDetailsScreenState extends State<WorkspaceDetailsScreen> {
                     ),
 
                     if (state is BoardSuccessState)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Boards",
                           style: TextStyle(
@@ -207,7 +208,16 @@ class _WorkspaceDetailsScreenState extends State<WorkspaceDetailsScreen> {
                                             Icons.arrow_forward_ios,
                                           ),
                                           onTap: () {
-                                            // TODO: Navigate to BoardDetailsScreen
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => BoardDetailsScreen(
+                                                  workspaceId: widget.workspaceId,
+                                                  boardId: board.boardId,
+                                                  boardName: board.boardName,
+                                                ),
+                                              ),
+                                            );
                                           },
                                         ),
                                       );
@@ -234,7 +244,7 @@ class _WorkspaceDetailsScreenState extends State<WorkspaceDetailsScreen> {
                       child: Center(
                         child: SingleChildScrollView(
                           child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 600),
                             curve: Curves.easeInOut,
                             width: MediaQuery.of(context).size.width * 0.9,
                             padding: const EdgeInsets.all(20.0),

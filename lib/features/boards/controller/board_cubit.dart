@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import '../../../core/utils/id_generator.dart';
 import '../data/board_model.dart';
 import 'board_states.dart';
@@ -62,6 +63,8 @@ class BoardCubit extends Cubit<BoardStates> {
       ); // Fetch boards after creating a new one to update the UI
     } catch (e) {
       emit(BoardErrorState(message: "Failed to create board"));
+      debugPrint(e.toString());
+
     }
   }
 
@@ -90,6 +93,8 @@ class BoardCubit extends Cubit<BoardStates> {
       emit(BoardSuccessState(boards));
     } catch (e) {
       emit(BoardErrorState(message: "Failed to fetch boards"));
+      debugPrint(e.toString());
+
     }
   }
 }
