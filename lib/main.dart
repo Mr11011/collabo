@@ -12,6 +12,7 @@ import 'features/auth/controller/auth_states.dart';
 import 'features/auth/views/sign_in_screen.dart';
 import 'features/boards/controller/board_cubit.dart';
 import 'features/home_screen.dart';
+import 'features/task/controller/task_cubit.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -36,6 +37,10 @@ void main() async {
               ),
               BlocProvider(
                 create: (BuildContext context) => sl<BoardCubit>(),
+              ),
+
+              BlocProvider(
+                create: (BuildContext context) => sl<TaskCubit>(),
               ),
             ],
             child: const MyApp(),
