@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final String? labelText;
@@ -15,7 +14,7 @@ class CustomTextFormField extends StatelessWidget {
   final Color? borderColor;
 
   const CustomTextFormField(
-      {Key? key,
+      {super.key,
       this.labelText,
       this.hintText,
       this.controller,
@@ -26,8 +25,7 @@ class CustomTextFormField extends StatelessWidget {
       this.suffixIcon,
       this.onSuffixIconPressed,
       this.focusedCustomColor,
-      this.borderColor})
-      : super(key: key);
+      this.borderColor});
 
   @override
   Widget build(BuildContext context) {

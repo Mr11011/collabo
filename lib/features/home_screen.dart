@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import '../core/di.dart';
 import 'auth/controller/auth_cubit.dart';
 import 'auth/controller/auth_states.dart';
+import 'boards/views/workspace_details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -27,7 +28,7 @@ class HomeScreen extends StatelessWidget {
               sl<AuthCubit>().signOut();
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => SignInScreen()),
+                MaterialPageRoute(builder: (context) => const SignInScreen()),
                 (route) => false,
               );
             },
@@ -52,13 +53,12 @@ class HomeScreen extends StatelessWidget {
                     backgroundColor: Colors.red,
                   );
                   context.read<WorkSpaceCubit>().fetchWorkspaces();
-
                 }
                 if (workspaceState is WorkspaceErrorStates) {
                   return Padding(
                     padding: const EdgeInsets.all(25.0),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
                           height: 35,
@@ -83,7 +83,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Center(
                           child: ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
@@ -109,6 +109,38 @@ class HomeScreen extends StatelessWidget {
                               workspaceState.message,
                               style: const TextStyle(color: Colors.white),
                             ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                const CreateWorkspaceScreen(),
+                              ),
+                            ).then((_) {
+                              // Refresh workspaces after returning
+                              context
+                                  .read<WorkSpaceCubit>()
+                                  .fetchWorkspaces();
+                            });
+                          },
+                          icon: const Icon(Icons.add),
+                          label: const Text("Add Workspace"),
+                          style: ElevatedButton.styleFrom(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
                           ),
                         ),
                       ],
@@ -198,7 +230,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       // Grid of workspaces
                       Expanded(
                         child:
@@ -237,7 +269,28 @@ class HomeScreen extends StatelessWidget {
                                           ),
                                           child: InkWell(
                                             onTap: () {
-                                              // TODO: Navigate to workspace details or Kanban screen
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder:
+                                                      (
+                                                        context,
+                                                      ) => WorkspaceDetailsScreen(
+                                                        workspaceId:
+                                                            workspace
+                                                                .workspaceId,
+                                                        workspaceName:
+                                                            workspace.name,
+                                                        workspaceDescription:
+                                                            workspace
+                                                                .description,
+                                                        memberCount:
+                                                            workspace
+                                                                .memberIds
+                                                                .length,
+                                                      ),
+                                                ),
+                                              );
                                             },
                                             borderRadius: BorderRadius.circular(
                                               12,
@@ -284,11 +337,13 @@ class HomeScreen extends StatelessWidget {
                                                         overflow:
                                                             TextOverflow
                                                                 .ellipsis,
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                           fontSize: 10,
                                                         ),
                                                       ),
-                                                      SizedBox(height: 10),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
                                                       Row(
                                                         children: [
                                                           Icon(
@@ -328,7 +383,7 @@ class HomeScreen extends StatelessWidget {
                                                   const SizedBox(height: 4),
                                                   Row(
                                                     children: [
-                                                      Icon(
+                                                      const Icon(
                                                         Icons.group,
                                                         size: 16,
                                                         color: Colors.blue,
@@ -336,7 +391,7 @@ class HomeScreen extends StatelessWidget {
                                                       const SizedBox(width: 4),
                                                       Text(
                                                         '${workspace.memberIds.length} Member${workspace.memberIds.length != 1 ? 's' : ''}',
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                           fontSize: 12,
                                                           color: Colors.blue,
                                                         ),
@@ -354,7 +409,7 @@ class HomeScreen extends StatelessWidget {
                                 ? Center(
                                   child: Text(
                                     workspaceState.message,
-                                    style: const TextStyle(color: Colors.red),
+                                    style: const TextStyle(color: Colors.blueGrey),
                                   ),
                                 )
                                 : const Center(
