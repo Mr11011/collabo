@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collabo/features/task/view/task_assignment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -37,6 +39,16 @@ class _BoardDetailsScreenState extends State<BoardDetailsScreen> {
     });
   }
 
+  Future<String> getUsernames(List<String> uids) async {
+    final usernames = <String>[];
+    for (final uid in uids) {
+      final userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      usernames.add(userDoc.data()!['username']);
+    }
+    return usernames.join(', ');
+  }
+
   @override
   void dispose() {
     titleController.dispose();
@@ -64,7 +76,8 @@ class _BoardDetailsScreenState extends State<BoardDetailsScreen> {
       body: BlocProvider(
         create:
             (context) =>
-                sl<TaskCubit>()..fetchTasks(widget.workspaceId, widget.boardId),
+                sl<TaskCubit>()
+                  ..listenToTasks(widget.workspaceId, widget.boardId),
         child: BlocConsumer<TaskCubit, TaskStates>(
           listener: (context, state) {
             if (state is TaskCreatedState) {
@@ -96,20 +109,38 @@ class _BoardDetailsScreenState extends State<BoardDetailsScreen> {
                 Column(
                   children: [
                     if (state is TaskSuccessState)
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          "Tasks",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.deepPurpleAccent,
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Container(
+                          width: 250,
+                          height: 65,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.blue.shade700,
+                                Colors.blue.shade400,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'Tasks',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       ),
                     Expanded(
                       child:
-                          state is TaskLoadingState
+                          state is TaskLoadingState || state is TaskUpdatedState
                               ? const Center(child: CircularProgressIndicator())
                               : state is TaskSuccessState
                               ? state.tasks.isEmpty
@@ -150,7 +181,7 @@ class _BoardDetailsScreenState extends State<BoardDetailsScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(task.description),
-                                              const SizedBox(height: 4),
+                                              const SizedBox(height: 6),
                                               task.status.isNotEmpty
                                                   ? Text(
                                                     'Status: ${task.status.replaceFirst(task.status[0], task.status[0].toUpperCase())}',
@@ -164,38 +195,110 @@ class _BoardDetailsScreenState extends State<BoardDetailsScreen> {
                                                       color: Colors.blue,
                                                     ),
                                                   ),
+                                              const SizedBox(height: 2),
+
                                               Text(
                                                 'Due date: ${dueDate.replaceFirst(dueDate[0], dueDate[0].toUpperCase())}',
                                                 style: TextStyle(
-                                                  color: Colors.orange.shade600,
+                                                  color:
+                                                      Colors.redAccent.shade700,
                                                 ),
                                               ),
+                                              const SizedBox(height: 2),
 
-                                              const SizedBox(height: 10),
                                               Text(
                                                 "Created At: ${createdDate.toString()}",
                                               ),
+                                              const SizedBox(height: 2),
+
+                                              FutureBuilder<String>(
+                                                future: getUsernames(
+                                                  task.assignedUserIds,
+                                                ),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.hasData) {
+                                                    return Text(
+                                                      'Assigned: ${snapshot.data?.replaceFirst(snapshot.data![0], snapshot.data![0].toUpperCase())}',
+                                                      style: TextStyle(
+                                                        color:
+                                                            Colors
+                                                                .grey
+                                                                .shade600,
+                                                      ),
+                                                    );
+                                                  }
+                                                  return const Text(
+                                                    'Assigned: Loading...',
+                                                  );
+                                                },
+                                              ),
                                             ],
                                           ),
-                                          trailing: IconButton(
-                                            onPressed: () {
-                                              _deleteDialog(
-                                                context,
-                                                task.taskId,
-                                              );
-
-                                              // context
-                                              //     .read<TaskCubit>()
-                                              //     .deleteTask(
-                                              //       workspaceId:
-                                              //           widget.workspaceId,
-                                              //       boardId: widget.boardId,
-                                              //       taskId: task.taskId,
-                                              //     );
-                                            },
-                                            icon: const Icon(Icons.delete),
+                                          trailing: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              IconButton(
+                                                onPressed: () {
+                                                  _deleteDialog(
+                                                    context,
+                                                    task.taskId,
+                                                  );
+                                                },
+                                                icon: const Icon(Icons.delete),
+                                              ),
+                                              IconButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) {
+                                                        return TaskAssignmentScreen(
+                                                          workspaceId:
+                                                              widget
+                                                                  .workspaceId,
+                                                          boardId:
+                                                              widget.boardId,
+                                                          taskId: task.taskId,
+                                                          currentAssignees:
+                                                              task.assignedUserIds,
+                                                          currentDueDate:
+                                                              task.dueDate
+                                                                  ?.toDate(),
+                                                        );
+                                                      },
+                                                    ),
+                                                  );
+                                                },
+                                                icon: const Icon(
+                                                  Icons
+                                                      .keyboard_double_arrow_right,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          onTap: () {},
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (
+                                                      context,
+                                                    ) => TaskAssignmentScreen(
+                                                      workspaceId:
+                                                          widget.workspaceId,
+                                                      boardId: widget.boardId,
+                                                      taskId: task.taskId,
+                                                      currentAssignees:
+                                                          task.assignedUserIds,
+                                                      currentDueDate:
+                                                          task.dueDate
+                                                              ?.toDate(),
+                                                    ),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       );
                                     },
@@ -293,6 +396,7 @@ class _BoardDetailsScreenState extends State<BoardDetailsScreen> {
                                                             .text,
                                                     status: 'todo',
                                                     dueDate: selectedDate,
+                                                    assignedUserIds: [],
                                                   );
                                             }
                                           },
