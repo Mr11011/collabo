@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collabo/features/workspace/controller/workspace_states.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import '../data/workspace_model.dart';
 
 class WorkSpaceCubit extends Cubit<WorkspaceStates> {
@@ -85,12 +84,10 @@ class WorkSpaceCubit extends Cubit<WorkspaceStates> {
         'memberIds': FieldValue.arrayUnion([user.uid]),
       });
 
-
       // Refresh the workspaces list
       await fetchWorkspaces();
     } catch (e) {
       emit(WorkspaceFailedJoiningStates(message: 'Failed to join workspace'));
-
     }
   }
 }

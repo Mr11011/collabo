@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collabo/features/auth/widgets/customTextfield.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
@@ -6,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../../core/utils/id_generator.dart';
 import '../../../core/di.dart';
 import '../controller/workspace_cubit.dart';
 import '../controller/workspace_states.dart';
@@ -36,15 +36,15 @@ class _CreateWorkspaceScreenState extends State<CreateWorkspaceScreen> {
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
 
-        title: Text('Create Workspace', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Create Workspace',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.blue,
       ),
       body: BlocProvider(
-        create:
-            (context) => WorkSpaceCubit(
-              firestore: sl<FirebaseFirestore>(),
-              firebaseAuth: sl<FirebaseAuth>(),
-            ),
+        create: (context) => sl<WorkSpaceCubit>(),
+
         child: BlocConsumer<WorkSpaceCubit, WorkspaceStates>(
           listener: (context, state) {
             if (state is WorkspaceSuccessStates) {
@@ -65,7 +65,7 @@ class _CreateWorkspaceScreenState extends State<CreateWorkspaceScreen> {
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 child: Form(
@@ -82,7 +82,7 @@ class _CreateWorkspaceScreenState extends State<CreateWorkspaceScreen> {
                             (value) =>
                                 value!.isEmpty ? 'Name is required' : null,
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       CustomTextFormField(
                         controller: descriptionController,
                         labelText: 'Description',
@@ -94,7 +94,7 @@ class _CreateWorkspaceScreenState extends State<CreateWorkspaceScreen> {
                                     : null,
                       ),
 
-                      SizedBox(height: 35),
+                      const SizedBox(height: 35),
 
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -103,7 +103,7 @@ class _CreateWorkspaceScreenState extends State<CreateWorkspaceScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             vertical: 15,
                             horizontal: 40,
                           ),
@@ -119,9 +119,9 @@ class _CreateWorkspaceScreenState extends State<CreateWorkspaceScreen> {
                         },
                         child: ConditionalBuilder(
                           condition: state is! WorkspaceLoadingStates,
-                          builder: (context) => Text('Create Workspace'),
+                          builder: (context) => const Text('Create Workspace'),
                           fallback:
-                              (context) => CircularProgressIndicator(
+                              (context) => const CircularProgressIndicator(
                                 color: Colors.white,
                               ),
                         ),
@@ -136,15 +136,4 @@ class _CreateWorkspaceScreenState extends State<CreateWorkspaceScreen> {
       ),
     );
   }
-}
-
-final String _chars =
-    'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-
-String generateShortId(int length) {
-  final Random random = Random();
-  return List.generate(
-    length,
-    (_) => _chars[random.nextInt(_chars.length)],
-  ).join();
 }

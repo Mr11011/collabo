@@ -56,7 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           SingleChildScrollView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: BlocConsumer<AuthCubit, AuthStates>(
               builder: (context, state) {
                 return Form(
@@ -77,14 +77,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                         ),
-                        Text(
+                        const Text(
                           "Create your account",
                           style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 25),
+                        const SizedBox(height: 25),
                         CustomTextFormField(
                           labelText: "Username",
                           hintText: "Enter your username",
@@ -127,7 +127,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           },
                           controller: phoneController,
                         ),
-                        SizedBox(height: 25),
+                        const SizedBox(height: 25),
 
                         CustomTextFormField(
                           labelText: "Email",
@@ -271,9 +271,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ),
                           condition: state is! AuthLoadingState,
                           fallback:
-                              (context) => Center(
+                              (context) => const Center(
                                 child: Center(
-                                  child: const CircularProgressIndicator(),
+                                  child: CircularProgressIndicator(),
                                 ),
                               ),
                         ),

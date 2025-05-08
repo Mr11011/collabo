@@ -34,7 +34,7 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent.withValues(alpha: 0.8),
-        title: Text("Sign In", style: TextStyle(color: Colors.white)),
+        title: const Text("Sign In", style: TextStyle(color: Colors.white)),
       ),
       body: Stack(
         children: [
@@ -50,7 +50,7 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
           SingleChildScrollView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: BlocConsumer<AuthCubit, AuthStates>(
               builder: (context, AuthStates state) {
                 return Padding(
@@ -70,14 +70,14 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                         ),
-                        Text(
+                        const Text(
                           "Welcome Back",
                           style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 25),
+                        const SizedBox(height: 25),
                         CustomTextFormField(
                           labelText: "Email",
                           hintText: "Enter your email address",
@@ -112,7 +112,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             return null;
                           },
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         CustomTextFormField(
                           labelText: "Password",
                           hintText: "Enter your password",
@@ -146,7 +146,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             return null;
                           },
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         ConditionalBuilder(
                           builder:
                               (context) => ElevatedButton(
@@ -174,7 +174,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           fallback:
                               (context) => const CircularProgressIndicator(),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
@@ -185,11 +185,11 @@ class _SignInScreenState extends State<SignInScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SignUpScreen(),
+                                  builder: (context) => const SignUpScreen(),
                                 ),
                               );
                             },
-                            child: Text(
+                            child: const Text(
                               "Don't have account? Sign Up",
                               style: TextStyle(
                                 decoration: TextDecoration.underline,
