@@ -22,7 +22,7 @@ class BoardCubit extends Cubit<BoardStates> {
     String name,
     String description,
   ) async {
-    // emit(BoardLoadingState());
+    emit(BoardLoadingState());
     // Fetch the current user
     final user = _firebaseAuth.currentUser;
     if (user == null) {
@@ -97,4 +97,5 @@ class BoardCubit extends Cubit<BoardStates> {
 
     }
   }
+
 }

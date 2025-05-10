@@ -115,8 +115,7 @@ class _TaskAssignmentScreenState extends State<TaskAssignmentScreen> {
                         backgroundColor: Colors.green,
                       );
                       Navigator.pop(context);
-                    }
-                    else if (state is TaskErrorState) {
+                    } else if (state is TaskErrorState) {
                       Fluttertoast.showToast(
                         msg: state.message,
                         backgroundColor: Colors.red,

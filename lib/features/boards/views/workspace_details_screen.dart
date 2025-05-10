@@ -49,7 +49,7 @@ class _WorkspaceDetailsScreenState extends State<WorkspaceDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.workspaceName),
+        title: const Text("WorkSpace"),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
       ),
@@ -211,11 +211,16 @@ class _WorkspaceDetailsScreenState extends State<WorkspaceDetailsScreen> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => BoardDetailsScreen(
-                                                  workspaceId: widget.workspaceId,
-                                                  boardId: board.boardId,
-                                                  boardName: board.boardName,
-                                                ),
+                                                builder:
+                                                    (
+                                                      context,
+                                                    ) => BoardDetailsScreen(
+                                                      workspaceId:
+                                                          widget.workspaceId,
+                                                      boardId: board.boardId,
+                                                      boardName:
+                                                          board.boardName,
+                                                    ),
                                               ),
                                             );
                                           },

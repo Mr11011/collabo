@@ -5,7 +5,7 @@ class Task {
   final String boardId;
   final String title;
   final String description;
-  final String status; // 'todo', 'inprogress', 'done'
+  final String status; // 'todo', 'inProgress', 'done'
   final Timestamp? dueDate;
   final List<String> assignedUserIds;
   final Timestamp createdAt;
