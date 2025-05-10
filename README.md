@@ -22,7 +22,7 @@ A Flutter-based application for collaborative task management, enabling users to
 ### Installation
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-repo/collabo.git](https://github.com/Mr11011/collabo-workspace-app-MahmoudElrouby.git
+   git clone https://github.com/Mr11011/collabo-workspace-app-MahmoudElrouby.git
    cd collabo
    ```
 
