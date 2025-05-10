@@ -5,7 +5,7 @@ class Task {
   final String boardId;
   final String title;
   final String description;
-  final String status; // 'todo', 'inprogress', 'done'
+  final String status; // 'todo', 'inProgress', 'done'
   final Timestamp? dueDate;
   final List<String> assignedUserIds;
   final Timestamp createdAt;
@@ -42,7 +42,9 @@ class Task {
       description: map['description'] as String,
       status: map['status'] as String,
       dueDate: map['dueDate'] as Timestamp?,
-      assignedUserIds: List<String>.from(map['assignedUserIds'] as List<dynamic>),
+      assignedUserIds: List<String>.from(
+        map['assignedUserIds'] as List<dynamic>,
+      ),
       createdAt: map['createdAt'] as Timestamp,
     );
   }

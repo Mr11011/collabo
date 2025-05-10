@@ -24,6 +24,7 @@ class TaskCubit extends Cubit<TaskStates> {
     required String description,
     required String status,
     DateTime? dueDate,
+    required List<String> assignedUserIds,
   }) async {
     try {
       emit(TaskLoadingState());
@@ -40,7 +41,7 @@ class TaskCubit extends Cubit<TaskStates> {
         title: title,
         description: description,
         status: status,
-        assignedUserIds: [user.uid],
+        assignedUserIds: assignedUserIds.isEmpty ? [user.uid] : assignedUserIds,
         dueDate: dueDate != null ? Timestamp.fromDate(dueDate) : null,
         createdAt: Timestamp.now(),
       );
@@ -118,6 +119,58 @@ class TaskCubit extends Cubit<TaskStates> {
       emit(TaskErrorState(message: 'Error updating task status'));
       debugPrint(e.toString());
     }
+  }
+
+  Future<void> updateTask({
+    required String workspaceId,
+    required String boardId,
+    required String taskId,
+    required List<String> assignedUserIds,
+    DateTime? dueDate,
+  }) async {
+    try {
+      emit(TaskLoadingState());
+      final user = _firebaseAuth.currentUser;
+      if (user == null) {
+        emit(TaskErrorState(message: 'User not authenticated'));
+        return;
+      }
+      await _firestore
+          .collection('workspaces')
+          .doc(workspaceId)
+          .collection('boards')
+          .doc(boardId)
+          .collection('tasks')
+          .doc(taskId)
+          .update({
+            'assignedUserIds': assignedUserIds,
+            'dueDate': dueDate != null ? Timestamp.fromDate(dueDate) : null,
+          });
+      emit(TaskUpdatedState());
+      await fetchTasks(workspaceId, boardId);
+    } catch (e) {
+      emit(TaskErrorState(message: 'Error updating task: $e'));
+      debugPrint(e.toString());
+    }
+  }
+
+
+  void listenToTasks(String workspaceId, String boardId) {
+    emit(TaskLoadingState());
+    _firestore
+        .collection('workspaces')
+        .doc(workspaceId)
+        .collection('boards')
+        .doc(boardId)
+        .collection('tasks')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .listen((snapshot) {
+      final tasks = snapshot.docs.map((doc) => Task.fromMap(doc.data())).toList();
+      emit(TaskSuccessState(tasks));
+    }, onError: (e) {
+      emit(TaskErrorState(message: 'Error streaming tasks: $e'));
+    });
   }
 
   Future<void> deleteTask({
