@@ -55,59 +55,52 @@ A Flutter-based application for collaborative task management, enabling users to
 
 ---------------------------------------------------------------------------
 
-Decision-Making Report for Collaborative Workspace Application
-1. Backend Choice
-Choice: Firebase Cloud Functions
+# Decision-Making Report for Collaborative Workspace Application
 
-Reason: I chose Firebase Cloud Functions because they work well with Flutter and Firestore, and I’ve used them before in serverless Flutter apps. They suit small to medium apps like this one, with a free tier and a strong ecosystem compared to Supabase. Firestore’s NoSQL structure supports fast reads, which helps with real-time task updates.
+## 1. Backend Choice
+**Choice**: Firebase Cloud Functions  
+**Reason**: I chose Firebase Cloud Functions because they work well with Flutter and Firestore, and I’ve used them before in serverless Flutter apps. They suit small to medium apps like this one, with a free tier and a strong ecosystem compared to Supabase. Firestore’s NoSQL structure supports fast reads, which helps with real-time task updates.
 
-Factors Influencing Decision:
+**Factors Influencing Decision**:  
+- **Integration Speed**: Firebase’s Flutter tools and Firestore make setup quick, unlike Laravel or Flask, which need custom servers.  
+- **Cost**: Firebase’s free tier fits small to medium apps, though costs can grow with heavy use compared to predictable server costs elsewhere.  
+- **Scaling**: Firebase handles traffic spikes automatically, but scaling can get pricey compared to fixed-server options like Flask. It works for this app’s needs.  
+- **Flexibility**: Firebase’s maturity and Flutter support made it a solid pick.
 
-Integration Speed: Firebase’s Flutter tools and Firestore make setup quick, unlike Laravel or Flask, which need custom servers.
-Cost: Firebase’s free tier fits small to medium apps, though costs can grow with heavy use compared to predictable server costs elsewhere.
-Scaling: Firebase handles traffic spikes automatically, but scaling can get pricey compared to fixed-server options like Flask. It works for this app’s needs.
-Flexibility: Firebase’s maturity and Flutter support made it a solid pick.
-2. Database Choice
-Choice: Firebase Firestore
+## 2. Database Choice
+**Choice**: Firebase Firestore  
+**Reason**: Firestore’s NoSQL setup matches the app’s data structure (workspaces > boards > tasks), and my past work with it in Flutter projects sped things up. Its real-time streams keep task updates instant for collaboration.  
+**Comparison**:  
+- **Supabase (PostgreSQL)**: Good for complex queries but needs extra work for real-time compared to Firestore’s built-in streams.  
+- **MySQL**: Structured, but not great for nested data and lacks real-time sync.  
+- **Firestore**: Makes nested queries easy and scales on its own.
 
-Reason: Firestore’s NoSQL setup matches the app’s data structure (workspaces > boards > tasks), and my past work with it in Flutter projects sped things up. Its real-time streams keep task updates instant for collaboration.
+## 3. Storage (for Attachments)
+**Choice**: Firebase Storage  
+**How**: I’d store task attachments (e.g., images, documents) in Firebase Storage at `attachments/{workspaceId}/{boardId}/{taskId}/{fileId}` using Flutter’s `firebase_storage` package, with metadata in Firestore’s `tasks/{taskId}`.  
+**Why**: Firebase Storage fits smoothly with my Firebase setup (Firestore, Authentication) and Flutter. Its free tier works for small to medium apps, and security rules limit access to workspace members.  
+**Comparison**:  
+- **Firebase Storage**: Simple, free tier, good for small/medium apps, but costs more at scale.  
+- **Amazon S3**: Great for big apps with scalability, but too complex for this project.  
+- **Supabase Storage**: Less developed than Firebase and doesn’t match my Firebase stack.
 
-Comparison:
+## 4. Implementation Plan
+**Database Structure**:  
+- **Firestore**:  
+  - `users/{uid}`: Stores `username`, `email`.  
+  - `workspaces/{workspaceId}`: Stores `name`, `description`, `memberIds`, `ownerId`.  
+  - `workspaces/{workspaceId}/boards/{boardId}`: Stores `boardName`, `createdAt`.  
+  - `workspaces/{workspaceId}/boards/{boardId}/tasks/{taskId}`: Stores `title`, `description`, `status`, `dueDate`, `assignedUserIds`.  
 
-Supabase (PostgreSQL): Good for complex queries but needs extra work for real-time compared to Firestore’s built-in streams.
-MySQL: Structured, but not great for nested data and lacks real-time sync.
-Firestore: Makes nested queries easy and scales on its own.
-3. Storage (for Attachments)
-Choice: Firebase Storage
+**Storage Structure**:  
+- Files stored in **Firebase Storage** at `attachments/{workspaceId}/{boardId}/{taskId}/{fileId}`, with metadata in Firestore’s `tasks/{taskId}`.  
 
-How: I’d store task attachments (e.g., images, documents) in Firebase Storage at attachments/{workspaceId}/{boardId}/{taskId}/{fileId} using Flutter’s firebase_storage package, with metadata in Firestore’s tasks/{taskId}.
-
-Why: Firebase Storage fits smoothly with my Firebase setup (Firestore, Authentication) and Flutter. Its free tier works for small to medium apps, and security rules limit access to workspace members.
-
-Comparison:
-
-Firebase Storage: Simple, free tier, good for small/medium apps, but costs more at scale.
-Amazon S3: Great for big apps with scalability, but too complex for this project.
-Supabase Storage: Less developed than Firebase and doesn’t match my Firebase stack.
-4. Implementation Plan
-Database Structure:
-
-Firestore:
-users/{uid}: Stores username, email.
-workspaces/{workspaceId}: Stores name, description, memberIds, ownerId.
-workspaces/{workspaceId}/boards/{boardId}: Stores boardName, createdAt.
-workspaces/{workspaceId}/boards/{boardId}/tasks/{taskId}: Stores title, description, status, dueDate, assignedUserIds.
-Storage Structure:
-
-Files stored in Firebase Storage at attachments/{workspaceId}/{boardId}/{taskId}/{fileId}, with metadata in Firestore’s tasks/{taskId}.
-App Connection:
-
-Uses cloud_firestore, firebase_auth, firebase_storage.
+**App Connection**:  
+- Uses `cloud_firestore`, `firebase_auth`, `firebase_storage`.
 
 
 
-
-
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -115,60 +108,52 @@ Uses cloud_firestore, firebase_auth, firebase_storage.
 
 ## 1. Backend Architecture
 **How to scale backend services for 1 million users?**  
-To scale a backend for 1 million users, I’d focus on simple, general strategies as a junior developer:  
-- **Break into Small Services**: Split the backend into separate services (e.g., one for user login, another for task updates) to handle different tasks. This makes it easier to manage and scale each part.  
-- **Use a Fast Database**: Choose a database that can handle many users, like a NoSQL database for quick reads or a SQL database with indexes for fast searches.  
-- **Add Caching**: Store common data (e.g., user names) in a cache to reduce database load and speed up responses.  
-- **Balance Traffic**: Use a load balancer to spread user requests across multiple servers, preventing any single server from crashing.  
-- **Monitor Performance**: Check server usage with tools to find slow parts and fix them.  
-
+To scale a backend for 1 million users, I’d use these simple strategies:  
+- **Break into Small Services**: Split the backend into parts (e.g., one for login, one for tasks) to manage and grow each separately.  
+- **Use a Fast Database**: Pick a database that handles lots of users, like NoSQL for quick reads or SQL with indexes.  
+- **Add Caching**: Store common data (e.g., user names) in a cache to speed things up.  
+- **Balance Traffic**: Use a load balancer to spread requests across servers.  
+- **Monitor Performance**: Track server usage to fix slow spots.  
 
 ## 2. Authentication Strategy
 **Securing authentication in a mobile/web app**:  
-- Use **Firebase Authentication** for easy login with:  
-  - **Email/Password**: Users sign up with an email and password, with **email verification** to confirm their identity.  
-  - **OTP**: Allow login via one-time passwords sent to email or phone for extra security.  
+- Use **Firebase Authentication** with:  
+  - **Email/Password**: Users sign up with email and password, with **email verification** to confirm identity.  
+  - **OTP**: Allow login with one-time passwords for extra security.  
 - Protect data with **Firestore security rules** (e.g., only users in `workspaces/{id}.memberIds` can access tasks).  
 
-
 **Token expiration and refresh flows**:  
-- Firebase gives **ID tokens** that expire in 1 hour and **refresh tokens** that last longer.  
-- The `firebase_auth` package auto-refreshes ID tokens when they expire, keeping users logged in.  
-- Maybe Store refresh tokens safely in the app (e.g., using `flutter_secure_storage`).  
-- If a token fails (e.g., user is logged out), ask them to sign in again.  
+- Firebase provides **ID tokens** (expire in 1 hour) and **refresh tokens**.  
+- The `firebase_auth` package refreshes ID tokens automatically to keep users logged in.  
+- Store refresh tokens safely (e.g., `flutter_secure_storage`).  
+- If a token fails, ask users to sign in again.  
 
 ## 3. Database Modeling
 **Designing relationships between Users, Workspaces, Boards, and Tasks**:  
- 
-- **Users**: Collection `users/{uid}` with fields `username`, `email`.  
-- **Workspaces**: Collection `workspaces/{workspaceId}` with `name`, `description`, `memberIds` (array of user UIDs), `ownerId`.  
-- **Boards**: Subcollection `workspaces/{workspaceId}/boards/{boardId}` with `boardName`, `createdAt`.  
-- **Tasks**: Subcollection `workspaces/{workspaceId}/boards/{boardId}/tasks/{taskId}` with `title`, `description`, `status` (To-Do, In Progress, Done), `dueDate`, `assignedUserIds` (array of UIDs).  
+- **Users**: `users/{uid}` with `username`, `email`.  
+- **Workspaces**: `workspaces/{workspaceId}` with `name`, `description`, `memberIds`, `ownerId`.  
+- **Boards**: `workspaces/{workspaceId}/boards/{boardId}` with `boardName`, `createdAt`.  
+- **Tasks**: `workspaces/{workspaceId}/boards/{boardId}/tasks/{taskId}` with `title`, `description`, `status`, `dueDate`, `assignedUserIds`.  
 **Relationships**:  
-- **Users ↔ Workspaces**: `memberIds` links users to workspaces; `ownerId` denotes the creator.  
-- **Workspaces ↔ Boards**: Boards are nested under workspaces for hierarchy.  
-- **Boards ↔ Tasks**: Tasks are nested under boards, with `assignedUserIds` linking to users.  
-
+- **Users ↔ Workspaces**: `memberIds` links users to workspaces; `ownerId` is the creator.  
+- **Workspaces ↔ Boards**: Boards are under workspaces.  
+- **Boards ↔ Tasks**: Tasks are under boards, with `assignedUserIds` linking to users.  
 
 ## 4. State Management (Frontend)
 **Comparing Provider, Riverpod, and BLoC (Flutter)**:  
-- **Provider**: Simple, lightweight for dependency injection and basic state (e.g., user data). Limited for complex reactive flows.  
-- **Riverpod**: Modern evolution of Provider, with scoped providers and better type safety. Supports reactive updates.  
-- **BLoC**: good for complex apps, separating UI from business logic via streams. Ideal for reactive, event-driven state like task updates. Higher boilerplate.  
+- **Provider**: Simple for basic state.  
+- **Riverpod**: Better for type safety and reactive updates.  
+- **BLoC**: Good for complex apps, separates UI from logic.  
 
-**Preference for this project**: **BLoC/Cubit**  
-- **Why**: Cubit, and BLoC, simplifies state management with less boilerplate, fitting my app’s needs (e.g., real-time task updates, Kanban drags, Gantt chart). Its reactive streams sync with Firestore, ensuring UI responsiveness (e.g., `TaskCubit` updates tasks). My experience with Cubit enabled rapid implementation, unlike Riverpod’s learning curve or Provider’s limitations for complex flows.  
+**Preference**: **BLoC/Cubit**  
+- **Why**: Cubit simplifies state management for my app’s needs (e.g., real-time updates, Kanban). It works well with Firestore streams.  
 
 ## 5. Offline Handling
 **Allowing offline use and synchronization**:  
-- **Firestore Offline Support**: Enable Firestore’s offline mode (`enablePersistence`) in Flutter to cache data locally. Users can create/edit tasks offline, with changes queued in local storage.  
-- **Sync on Reconnect**: Firestore automatically syncs queued changes when internet returns, updating `tasks/{taskId}` and notifying via streams (handled by `TaskCubit`).  
-- **UI Feedback**: Use `flutter_bloc` to show pending sync status (e.g., “Offline: Changes will sync later”) and confirm sync completion. Or make a listner for the internet connectivity for the mobile and when the listner detect that there is no internet it view a screen of 'no internet connection' 
-- **Conflict Resolution**: Firestore’s last-write-wins strategy resolves conflicts. For critical tasks, add version fields (e.g., `lastModified`) to detect conflicts and prompt user resolution.  
-- Cache attachment uploads locally and syncing to Firebase Storage when online.  
-
-
-
+- Enable Firestore’s offline mode to cache data locally.  
+- Sync changes when internet returns via Firestore.  
+- Use `flutter_bloc` to show offline status and sync confirmation.  
+- For attachments, cache uploads locally and sync when online.
 
 
 
