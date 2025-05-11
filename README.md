@@ -82,16 +82,16 @@ A Flutter-based application for collaborative task management, enabling users to
 
 ## 3. Storage (for Attachments)
 **Choice**: Firebase Storage
-1- I’d use Firebase Storage to store task attachments (e.g., images, documents) at attachments/{workspaceId}/{boardId}/{taskId}/{fileId} using Flutter’s firebase_storage package, with file metadata in Firestore’s tasks/{taskId}
+   1- I’d use Firebase Storage to store task attachments (e.g., images, documents) at attachments/{workspaceId}/{boardId}/{taskId}/{fileId} using Flutter’s firebase_storage package, with          file metadata in Firestore’s tasks/{taskId}
 
-2- Firebase Storage integrates easily with my Firebase-based app (Firestore, Authentication) and Flutter, and my experience for quick setup. Its free tier suits small apps and medium apps, and security rules ensure only workspace members access their files.
+   2- Firebase Storage integrates easily with my Firebase-based app (Firestore, Authentication) and Flutter, and my experience for quick setup. Its free tier suits small apps and medium          apps, and security rules ensure only workspace members access their files.
 
 
 **Comparison**:
 
-**Firebase Storage**: Simple, free, ideal for small/medium apps, but costlier at scale.
-**Amazon S3** Known for scalability and cost-efficiency in large-scale apps, which might make it seem like a safer choice for the report. Overkill for a small/medium apps with limited attachment needs, as its complexity and setup time.
-**Supabase Storage** Less mature than firebase storage Flutter support than Firebase but it will be a good option for the open source option. but misaligning with my Firebase stack.
+   - **Firebase Storage**: Simple, free, ideal for small/medium apps, but costlier at scale.
+   - **Amazon S3** Known for scalability and cost-efficiency in large-scale apps, which might make it seem like a safer choice for the report. Overkill for a small/medium apps with limited       attachment needs, as its complexity and setup time.
+   - **Supabase Storage** Less mature than firebase storage Flutter support than Firebase but it will be a good option for the open source option. but misaligning with my Firebase stack.
 
 
 **4. Implementation Plan**  
