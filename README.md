@@ -63,21 +63,21 @@ A Flutter-based application for collaborative task management, enabling users to
 
 **Factors Influencing Decision**: 
  
-**Integration Speed**: Firebase’s native Flutter SDKs and Firestore integration minimize setup time, unlike Laravel API or Flask/FastAPI, which require custom server setups.
+**Integration Speed**: Firebase’s native Flutter SDKs and Firestore integration minimize setup time, unlike Laravel API or Flask, which require custom server setups.
   
-- **Cost**: Firebase’s free tier supports small to medium apps, making it cost-effective initially. However, costs can rise with high request volumes, unlike Flask/FastAPI’s predictable server costs.
+- **Cost**: Firebase’s free tier supports small to medium apps, making it cost-effective initially. However, costs can rise with high request volumes, unlike the other backend choices which has a predictable server costs.
 
-- **Scaling**: Firebase auto-scales to handle traffic spikes, but scaling costs can be higher than fixed-server solutions like Flask/FastAPI. For this app’s scope, auto-scaling meets needs efficiently.  
+- **Scaling**: Firebase auto-scales to handle traffic spikes, but scaling costs can be higher than fixed-server solutions like Flask or others. For this app’s scope, auto-scaling meets needs efficiently.  
 
 - **Flexibility**: Firebase’s maturity and Flutter ecosystem support.
 
 ## 2. Database Choice
 **Choice**: Firebase Firestore  
-**Reason**: Firestore’s NoSQL structure aligns with the app’s hierarchical data model (workspaces > boards > tasks), and my prior experience with Firestore in Flutter projects ensured fast implementation. Its real-time streams support instant task updates, enhancing collaboration.  
+**Reason**: Firestore’s NoSQL structure aligns with the app’s hierarchical data model (workspaces > boards > tasks), and my previous experience with Firestore in Flutter projects ensured fast implementation. Its real-time streams support instant task updates, enhancing collaboration.  
 **Comparison**:  
 - **Supabase (PostgreSQL)**: Relational, ideal for complex queries, but requires more setup for real-time features compared to Firestore’s native streams.  
 - **MySQL**: Structured but less suited for nested data and lacks built-in real-time sync.  
-- **Firestore Advantage**: Simplifies subcollection queries (e.g., `workspaces/{id}/boards/{id}/tasks`) and scales automatically, unlike MySQL’s manual sharding.   
+- **Firestore**: Simplifies subcollection queries (e.g., `workspaces/{id}/boards/{id}/tasks`) and scales automatically.   
 
 
 ## 3. Storage (for Attachments)
@@ -90,8 +90,8 @@ A Flutter-based application for collaborative task management, enabling users to
 **Comparison**:
 
 **Firebase Storage**: Simple, free, ideal for small/medium apps, but costlier at scale.
-Amazon S3: Known for scalability and cost-efficiency in large-scale apps, which might make it seem like a safer choice for the report. Overkill for a small/medium apps with limited attachment needs, as its complexity and setup time.
-Supabase Storage: Less mature than firebase storage Flutter support than Firebase but it will be a good option for the open source option. but misaligning with my Firebase stack.
+**Amazon S3** Known for scalability and cost-efficiency in large-scale apps, which might make it seem like a safer choice for the report. Overkill for a small/medium apps with limited attachment needs, as its complexity and setup time.
+**Supabase Storage** Less mature than firebase storage Flutter support than Firebase but it will be a good option for the open source option. but misaligning with my Firebase stack.
 
 
 **4. Implementation Plan**  
