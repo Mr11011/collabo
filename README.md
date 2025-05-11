@@ -146,13 +146,13 @@ To scale a backend for 1 million users, I’d use these simple strategies:
 - **BLoC**: Good for complex apps, separates UI from logic.  
 
 **Preference**: **BLoC/Cubit**  
-- **Why**: Cubit simplifies state management for my app’s needs (e.g., real-time updates, Kanban). It works well with Firestore streams.  
+- **Why**: Cubit simplifies state management for my app’s needs (e.g., real-time updates, Kanban).
 
 ## 5. Offline Handling
 **Allowing offline use and synchronization**:  
 - Enable Firestore’s offline mode to cache data locally.  
 - Sync changes when internet returns via Firestore.  
-- Use `flutter_bloc` to show offline status and sync confirmation.  
+- Use UI feedback like toast message or snack bar to show offline status and sync confirmation or, making a connectivity listner for the internet connectivity of the device and if it detects the signal is lost, show 'No Interenet Connection' Screen.
 - For attachments, cache uploads locally and sync when online.
 
 
