@@ -54,7 +54,8 @@ A Flutter-based application for collaborative task management, enabling users to
 
 
 
-# Decision-Making Report for Collaborative Workspace Application
+
+## Decision-Making Report for Collaborative Workspace Application
 
 ## 1. Backend Choice
 **Choice**: Firebase Cloud Functions  
